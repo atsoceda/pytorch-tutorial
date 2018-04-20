@@ -24,22 +24,20 @@ test_dataset = dsets.MNIST(root='./data',
                            train=False, 
                            transform=transforms.ToTensor(),
                            download=True)
+print("Num training set images: ", len(train_dataset))
+print("Num testing set images: ", len(test_dataset))
+
 
 # Data Loader (Input Pipeline)
-# train_loader = torch.utils.data.DataLoader(dataset=train_dataset,
-#                                            batch_size=batch_size,
-#                                            shuffle=True)
-#
-# test_loader = torch.utils.data.DataLoader(dataset=test_dataset,
-#                                           batch_size=batch_size,
-#                                           shuffle=False)
 train_loader = DataLoader(dataset=train_dataset,
-                                           batch_size=batch_size,
-                                           shuffle=True)
+                          batch_size=batch_size,
+                          shuffle=True)
 
 test_loader  = DataLoader(dataset=test_dataset,
-                                          batch_size=batch_size,
-                                          shuffle=False)
+                          batch_size=batch_size,
+                          shuffle=False)
+
+print("Num batches", len([(j, imgs) for (j, imgs) in enumerate(train_loader)]))
 
 
 
@@ -77,10 +75,9 @@ for epoch in range(num_epochs):
         loss = criterion(outputs, labels)
         loss.backward()
         optimizer.step()
-        
         if (i+1) % 100 == 0:
-            print ('Epoch [%d/%d], Step [%d/%d], Loss: %.4f' 
-                   %(epoch+1, num_epochs, i+1, len(train_dataset)//batch_size, loss.data[0]))
+            print('Epoch [%d/%d], Step [%d/%d], Loss: %.4f'
+                  % (epoch+1, num_epochs, i+1, len(train_dataset)//batch_size, loss.data[0]))
 
 # Test the Model
 correct = 0
@@ -91,7 +88,7 @@ for images, labels in test_loader:
     _, predicted = torch.max(outputs.data, 1)
     total += labels.size(0)
     correct += (predicted == labels).sum()
-    print("Test set, correct/total:", correct/total)
+    #print("Test set, correct/total:", correct/total)
 
 print('Accuracy of the network on the 10000 test images: %d %%' % (100 * correct / total))
 
